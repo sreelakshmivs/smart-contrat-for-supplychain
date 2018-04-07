@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <link rel="stylesheet" type="text/css" href="main.css">
+
+    <script src="./node_modules/web3/dist/web3.min.js"></script>
+
+</head>
+<body>
+    <div class="container">
+
+        <h1>Supply Chain</h1>
+
+        <h2 id="order generation">hi</h2>
+
+        <label for="orderno" class="col-lg-2 control-label">orderno</label>
+        <input id="orderno" type="text">
+
+        <label for="product" class="col-lg-2 control-label">product</label>
+        <input id="product" type="text">
+
+        <label for="temp" class="col-lg-2 control-label">temp</label>
+        <input id="temp" type="text">
+
+        <label for="value" class="col-lg-2 control-label">value</label>
+        <input id="value" type="text">
+
+        <label for="quantity" class="col-lg-2 control-label">quantity</label>
+        <input id="quantity" type="text">
+
+        <label for="delivery" class="col-lg-2 control-label">delivery</label>
+        <input id="delivery" type="text">
+
+        <button id="button">Update registration</button>
+
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script>
+       if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            // set the provider you want from Web3.providers
+            web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:8545"));
+        }
+                web3.eth.defaultAccount = web3.eth.accounts[0];
+                var MyRegistry = web3.eth.contract([
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "orderno",
+                "type": "string"
+            }
+        ],
+        "name": "fetchInitialDetails",
+        "outputs": [
+            {
+                "name": "",
+                "type": "string"
+            },
+            {
+                "name": "",
+                "type": "string"
+            },
+            {
+                "name": "",
+                "type": "string"
+            },
+            {
+                "name": "",
+                "type": "string"
+            },
+            {
+                "name": "",
+                "type": "bytes32"
+            },
+            {
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "orderno",
+                "type": "string"
+            },
+            {
+                "name": "product",
+                "type": "string"
+            },
+            {
+                "name": "temp",
+                "type": "string"
+            },
+            {
+                "name": "value",
+                "type": "string"
+            },
+            {
+                "name": "quantity",
+                "type": "bytes32"
+            },
+            {
+                "name": "delivery",
+                "type": "string"
+            }
+        ],
+        "name": "createOrder",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "name": "orderno",
+                "type": "string"
+            }
+        ],
+        "name": "OrderGenerated",
+        "type": "event"
+    }
+]);
+         var Coursetro = MyRegistry.at('0xe533fad69b4de83d2448d75fb62453f641228623');
+        
+         console.log(Coursetro);
+         Coursetro.fetchInitialDetails("3",function(error, result){
+            if(!error)
+                {
+                    $("#order generation").html(result[0]);
+                    console.log("Order Number:" + web3.toAscii(result[4]));
+                   
+                }
+            else
+                console.error(error);
+        });
+
+        $("#button").click(function() {
+            Coursetro.createOrder($("#orderno").val(), $("#product").val(), $("#temp").val(), $("#value").val(), $("#quantity").val(), $("#delivery").val(), {from: web3.eth.accounts[0],gas:400000});
+            console.log("Success");
+        });
+
+
+
+    </script>
+
+</body>
+</html>
